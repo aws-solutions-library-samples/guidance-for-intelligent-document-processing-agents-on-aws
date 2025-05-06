@@ -52,7 +52,6 @@ export const AppSideNavigation = () => {
                         {
                             type: "link", text: AppRoutes.review.text, href: AppRoutes.review.href
                         },
-
                     ]
                 },
                 {

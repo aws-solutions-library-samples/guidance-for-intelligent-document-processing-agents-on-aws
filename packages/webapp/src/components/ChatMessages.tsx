@@ -20,9 +20,10 @@ const getFileType = (fileName: string): 'pdf' | 'image' | 'unknown' => {
 
 interface ChatMessagesProps {
     onNewMessage: () => void;
+    agentFlowRef: React.RefObject<any>;
 }
 
-export const ChatMessages: React.FC<ChatMessagesProps> = ({ onNewMessage }) => {
+export const ChatMessages: React.FC<ChatMessagesProps> = ({ onNewMessage, agentFlowRef }) => {
     const client = generateClient();
     const authedUser = useAtomValue(authedUserAtom);
     const { data: chats, refetch, isFetched } = useListChatsByUser(authedUser?.userID ?? "");
@@ -43,6 +44,62 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ onNewMessage }) => {
         }
     }, [chats, onNewMessage]);
 
+    const handleTraceUpdate = useCallback((trace: any, chatData?: any) => {
+        console.log('Processing trace:', trace);
+        
+        const traceEntry = {
+            timestamp: new Date().toISOString(),
+            text: trace?.content?.text || ''
+        };
+    
+        // Handle the very first call with flag check
+        if (trace?.content?.action === 'modelInvocationInput' && !trace?.content?.collaboratorName) {
+            console.log('First call detected');
+            if (trace?.content?.text) {
+                agentFlowRef.current?.addNodeTrace('supervisor', traceEntry);
+            }
+            // Show first call animation
+            agentFlowRef.current?.updateEdgeAnimation('e-user-supervisor', true);
+            
+            // Start continuous response animation
+            agentFlowRef.current?.updateEdgeAnimation('e-supervisor-response', true);
+            
+            setTimeout(() => {
+                agentFlowRef.current?.updateEdgeAnimation('e-user-supervisor', false);
+            }, 2000);
+        }
+        // Handle modelInvocationOutput with collaborator
+        else if (trace?.content?.action === 'modelInvocationOutput' && trace?.content?.collaboratorName) {
+            const nodeId = trace.content.collaboratorName === 'loan_application_assistant_agent' ? 'loanApplicant' : 'broker';
+            if (trace?.content?.text) {
+                agentFlowRef.current?.addNodeTrace(nodeId, traceEntry);
+            }
+            
+            // Increment counter and show animation
+            agentFlowRef.current?.incrementEdgeCount(`e-supervisor-${nodeId}`);
+            agentFlowRef.current?.updateEdgeAnimation(`e-supervisor-${nodeId}`, true);
+            setTimeout(() => {
+                agentFlowRef.current?.updateEdgeAnimation(`e-supervisor-${nodeId}`, false);
+            }, 2000);
+        }
+        // Handle modelInvocationOutput without collaborator
+        else if (trace?.content?.action === 'modelInvocationOutput' && !trace?.content?.collaboratorName) {
+            if (trace?.content?.text) {
+                agentFlowRef.current?.addNodeTrace('supervisor', traceEntry);
+            }
+        }
+        // Handle final response - stop animations when we get bot response
+        if (chatData?.onChatByUserId?.bot) {
+            const responseTrace = {
+                timestamp: new Date().toISOString(),
+                text: chatData.onChatByUserId.bot
+            };
+            agentFlowRef.current?.addNodeTrace('response', responseTrace);
+            setTimeout(() => {
+                agentFlowRef.current?.updateEdgeAnimation('e-supervisor-response', false);
+            }, 2000);
+        }
+    }, [agentFlowRef]);
 
     const setupSubscription = useCallback(() => {
         console.log("Setting up chat subscription");
@@ -54,6 +111,22 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ onNewMessage }) => {
             .subscribe({
                 next: ({ data }) => {
                     console.log("New chat message received:", data);
+                    // Process trace data from subscription
+                    if (data?.onChatByUserId?.payload) {
+                        try {
+                            const parsedPayload = JSON.parse(data.onChatByUserId.payload);
+                            
+                            if (parsedPayload.trace) {
+                                handleTraceUpdate(parsedPayload.trace, data); 
+                            } else if (data.onChatByUserId.bot) {
+                                // Handle case where we have a bot response but no trace
+                                handleTraceUpdate(null, data);
+                            }
+                        } catch (error) {
+                            console.error("Error processing chat payload:", error);
+                        }
+                    }
+                    
                     refetch();
                     onNewMessage();
                 },
@@ -61,7 +134,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ onNewMessage }) => {
             });
 
         return subscription;
-    }, [authedUser?.userID, refetch, onNewMessage]);
+    }, [authedUser?.userID, refetch, onNewMessage, handleTraceUpdate]);
 
     useEffect(() => {
         const subscription = setupSubscription();
@@ -144,7 +217,6 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ onNewMessage }) => {
         }
         return acc;
     }, [] as any[]);
-
 
     return (
         <Box padding="s">

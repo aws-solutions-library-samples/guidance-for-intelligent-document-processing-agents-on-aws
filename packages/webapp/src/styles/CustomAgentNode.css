@@ -1,0 +1,83 @@
+.custom-agent-node {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 2px solid #1a192b;
+  background: white;
+  font-size: 14px;
+  text-align: center;
+  width: 150px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.custom-agent-node:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Active state */
+.custom-agent-node.active {
+  border-width: 3px;
+  transform: scale(1.05);
+}
+
+/* Processing state with default blue pulse */
+.custom-agent-node.processing {
+  animation: pulse 1.5s infinite;
+  border-width: 2px;
+}
+
+/* Complete state */
+.custom-agent-node.complete {
+  background: #f6ffed;
+  border-color: #52c41a;
+  transition: all 0.3s ease;
+}
+
+/* Agent-specific processing animations */
+.custom-agent-node.processing.loan-applicant {
+  animation: pulseGreen 1.5s infinite;
+}
+
+.custom-agent-node.processing.broker {
+  animation: pulseOrange 1.5s infinite;
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+  0% {
+      box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.4);
+  }
+  70% {
+      box-shadow: 0 0 0 10px rgba(24, 144, 255, 0);
+  }
+  100% {
+      box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+  }
+}
+
+@keyframes pulseGreen {
+  0% {
+      box-shadow: 0 0 0 0 rgba(0, 133, 89, 0.4);
+  }
+  70% {
+      box-shadow: 0 0 0 10px rgba(0, 133, 89, 0);
+  }
+  100% {
+      box-shadow: 0 0 0 0 rgba(0, 133, 89, 0);
+  }
+}
+
+@keyframes pulseOrange {
+  0% {
+      box-shadow: 0 0 0 0 rgba(250, 111, 0, 0.4);
+  }
+  70% {
+      box-shadow: 0 0 0 10px rgba(250, 111, 0, 0);
+  }
+  100% {
+      box-shadow: 0 0 0 0 rgba(250, 111, 0, 0);
+  }
+}

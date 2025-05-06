@@ -3,26 +3,34 @@
 .chat-container {
   display: flex;
   flex-direction: column;
+  height: 100%; // Changed from 100% to 100vh for full viewport height
   gap: awsui.$space-static-l;
-
-  min-block-size: 100%;
   
   img {
     transition: transform 0.2s ease;
     &:hover {
-        transform: scale(1.05);
+      transform: scale(1.05);
     }
   }
 
-  &:not(.classic) {
-    @media only screen and (min-width: 688px) and (max-width: 1280px) {
-      padding-inline: 60px;
+  .aws-split-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    &-content {
+      flex: 1;
     }
   }
 
-  &.classic {
-    inline-size: 100%;
-    block-size: 1000px;
+  .react-flow-wrapper {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .react-flow {
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -30,10 +38,7 @@
   display: flex;
   flex-direction: column;
   gap: awsui.$space-scaled-xs;
-
-  padding-block-start: awsui.$space-scaled-xxs;
-  padding-block-end: awsui.$space-container-horizontal;
-  padding-inline: awsui.$space-container-horizontal;
+  padding: awsui.$space-scaled-xxs awsui.$space-container-horizontal awsui.$space-container-horizontal;
 }
 
 .access-denied-alert-wrapper {
@@ -43,8 +48,7 @@
   &__box {
     flex: 1;
     overflow-x: auto;
-    padding-inline: awsui.$space-scaled-m;
-    padding-block: awsui.$space-scaled-s;
+    padding: awsui.$space-scaled-s awsui.$space-scaled-m;
     border: 2px solid awsui.$color-border-input-default;
     border-radius: awsui.$border-radius-input;
     background: awsui.$color-background-input-default;
@@ -58,22 +62,22 @@
   min-height: 150px;
   
   .react-pdf__Document {
-      display: flex;
-      justify-content: center;
-      width: 100%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
   .react-pdf__Page {
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
   }
 }
 
 .thumbnail-container {
   cursor: pointer;
   transition: opacity 0.2s;
-}
 
-.thumbnail-container:hover {
-  opacity: 0.8;
+  &:hover {
+    opacity: 0.8;
+  }
 }

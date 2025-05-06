@@ -74,8 +74,8 @@ export function Actions() {
 
 export const FittedContainer = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div style={{ position: 'relative', flexGrow: 1 }}>
-      <div style={{ position: 'absolute', inset: 0 }}>{children}</div>
+    <div style={{ position: 'relative', flexGrow: 1, height: '100%' }}>
+      <div style={{ position: 'absolute', inset: 0, height: '100%' }}>{children}</div>
     </div>
   );
 };
