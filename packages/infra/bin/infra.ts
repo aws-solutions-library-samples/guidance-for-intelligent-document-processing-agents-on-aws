@@ -39,7 +39,7 @@ const infraStack = new InfraStack(app, "AutoLoanAPP", {
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
-
+  description: "SO9036"
 });
 
 cdk.Tags.of(infraStack).add("project", "auto-loan")
