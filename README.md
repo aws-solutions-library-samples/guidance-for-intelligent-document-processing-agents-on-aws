@@ -57,9 +57,10 @@ The demo script, use case, and persona is provided here: [Demo Script](/docs/dem
 5. [Install node and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), node.js 22 is recommended
 6. [Get started with CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html), and [bootstrap your environment for use](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping-env.html)
 7. [Install Docker](https://www.docker.com/get-started/), because we are bundling Lambda functions when running CDK so we need to install Docker. Please see the blog post about [Building, bundling and deploying applications with the AWS CDK](https://aws.amazon.com/blogs/devops/building-apps-with-aws-cdk/)
-8. [Run aws configure](https://docs.aws.amazon.com/cli/latest/reference/configure/set.html) to set up region
+8. [Run aws configure](https://docs.aws.amazon.com/cli/latest/reference/configure/set.html) to set up region. Need to run in us-west-2 for custom bda blueprints. 
+
 ```bash
-aws configure set region YOUR_REGION
+aws configure set region us-west-2
 ```
 9. [Enable models in Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html), for this use case, you need to enable Anthropic Claude Sonnet 3.5 v2
 

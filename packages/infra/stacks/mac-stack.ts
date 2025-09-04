@@ -94,7 +94,7 @@ export class MacStack extends Stack {
         /* BROKER AGENT + action group */
         this.broker_agent = new bedrock.Agent(this, "broker_agent_agent", {
             name: `broker_agent`,
-            foundationModel: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_SONNET_V2_0,
+            foundationModel: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_SONNET_V1_0,
             instruction: MACConfig.MACAgentInstruction.BrokerAgent,
             shouldPrepareAgent: true,
             description: MACConfig.MACDescription.BrokerAgent
@@ -140,7 +140,7 @@ export class MacStack extends Stack {
 
         this.loan_application_assistant_agent = new bedrock.Agent(this, "loan_application_assistant_agent", {
             name: `loan_application_assistant`,
-            foundationModel: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_SONNET_V2_0,
+            foundationModel: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_SONNET_V1_0,
             instruction: MACConfig.MACAgentInstruction.LoanAppAssistant,
             shouldPrepareAgent: true,
             description: MACConfig.MACDescription.LoanAppAssistant,

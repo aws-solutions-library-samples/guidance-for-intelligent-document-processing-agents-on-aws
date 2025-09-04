@@ -58,7 +58,7 @@ export class BucketStack extends Stack {
 
         prefixes.forEach(prefix => {
             new s3deploy.BucketDeployment(this, `Deploy${prefix.replace('/', '')}`, {
-                sources: [s3deploy.Source.data(`${prefix.replace('/', '')}.placeholder`, '')],
+                sources: [s3deploy.Source.data(`${prefix.replace('/', '')}.placeholder`, 'hello world')],
                 destinationBucket: this.dataBucket,
                 destinationKeyPrefix: prefix,
             });
